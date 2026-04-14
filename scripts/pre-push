@@ -1,0 +1,31 @@
+#!/bin/bash
+# Pre-push hook: block secrets from being pushed to GitHub
+# Install with: cp scripts/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+
+ZERO=$(printf '0%.0s' {1..40})
+while read -r local_ref local_sha remote_ref remote_sha; do
+    if [ "$local_sha" = "$ZERO" ]; then
+        # New branch — check all commits
+        range="$local_sha"
+    else
+        range="$remote_sha..$local_sha"
+    fi
+
+    # Check for secrets in staged files
+    SECRETS=$(git diff --cached --name-only | grep -iE '\.env$|\.secret$|\.key$|password|token' || true)
+    if [ -n "$SECRETS" ]; then
+        echo "❌ Blocked: secret files detected in commit:"
+        echo "$SECRETS"
+        exit 1
+    fi
+
+    # Check for actual secret patterns in file content
+    PATTERNS=$(git diff --cached --diff-filter=AM -p | grep -iE '(TELEGRAM_TOKEN=|OPENCODE_ZEN_API_KEY=|GEMINI_API_KEY=|password|secret|sk-[a-zA-Z0-9]{20})' || true)
+    if [ -n "$PATTERNS" ]; then
+        echo "❌ Blocked: potential secrets detected in diff:"
+        echo "$PATTERNS"
+        exit 1
+    fi
+done
+
+exit 0

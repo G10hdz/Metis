@@ -1,0 +1,70 @@
+# Secrets & Environment
+.env
+*.env
+*.secret
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Database files (user data)
+*.db
+*.sqlite3
+~/.metis/
+~/.ergane/
+
+# Logs
+*.log
+metis.log
+ergane-logs.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Cache
+.cache/
+.hf/
+*.cache
+
+# Whisper models (large)
+~/.cache/whisper-models/
+
+# Echo TTS cache
+~/.metis/echo-tts/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Coverage
+.coverage.*
+coverage.xml
+
+# mypy
+.mypy_cache/
+
+# ruff
+.ruff_cache/

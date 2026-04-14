@@ -1,0 +1,33 @@
+[Unit]
+Description=Metis AI Agent Orchestrator
+After=network-online.target
+
+[Service]
+Type=simple
+User=yourusername
+WorkingDirectory=/home/yourusername/Projects/Metis
+Environment="PATH=/home/yourusername/Projects/Metis/.venv/bin:/usr/local/bin:/usr/bin:/bin"
+# Async Telegram job controls (mobile command center)
+Environment="METIS_ASYNC_MAX_ACTIVE_PER_CHAT=3"
+Environment="METIS_ASYNC_HISTORY_PER_CHAT=50"
+
+# Startup delay to allow system to stabilize
+ExecStartPre=/bin/sleep 3
+
+# Start the service
+ExecStart=/home/yourusername/Projects/Metis/.venv/bin/python -m src
+
+# Restart configuration to prevent rapid restart loops
+Restart=always
+RestartSec=30
+StartupTimeoutSec=60
+
+# Memory limit to prevent OOM kills
+MemoryMax=4G
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
